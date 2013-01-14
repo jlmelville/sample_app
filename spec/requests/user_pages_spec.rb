@@ -163,6 +163,15 @@ describe "User Pages" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
+      it { should have_content("Microposts (2)") }
+    end
+
+    describe "micropost pagination" do
+      it "should list each post" do
+        Micropost.paginate(page: 1).each do |micropost|
+          page.should have_selector('li', text: micropost.content)
+        end
+      end
     end
   end
 end

@@ -23,7 +23,7 @@ describe "MicropostPages" do
     end
 
     describe "with valid information" do
-
+  
       before { fill_in 'micropost_content', with: "Lorem ipsum" }
       it "should create a micropost" do
         expect { click_button "Post" }.should change(Micropost, :count).by(1)
@@ -39,6 +39,19 @@ describe "MicropostPages" do
 
       it "should delete a micropost" do
         expect { click_link "delete" }.should change(Micropost, :count).by(-1)
+      end
+    end
+
+    describe "as incorrect user" do
+      
+      let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com") }
+      before do 
+        FactoryGirl.create(:micropost, user: wrong_user) 
+        visit users_path(wrong_user)
+      end
+
+      it "should not be able to delete other user's microposts" do
+        page.should_not have_link("delete")
       end
     end
   end
